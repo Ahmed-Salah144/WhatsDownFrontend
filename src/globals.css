@@ -58,42 +58,14 @@
   --color-highlightedText: var(--highlightedText);
   --color-warningLabel: var(--warningLabel);
 }
-/* dark theme */
-/* .dark {
-  --color-foreground: #2563eb;
-  --color-background: #111827;
-  --color-highlight: #001d5d;
-  --color-text: #f9fafb;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-} */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --highlight: #585252;
-  }
-} */
-
-/* body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--primaryBg);
 }
-.formCard {
-  @apply shadow-lg rounded-xl p-6 max-w-md mx-auto transition-transform transform hover:scale-105 flex flex-col gap-3;
-  min-height: 50vh;
-  min-width: 50vw;
-  background-color: var(--color-background);
-  place-items: center;
-  color: var(--text);
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
 }
-.banner {
-  @apply py-4 px-6 text-2xl w-full rounded-xl flex flex-col justify-items-center;
-  background-color: var(--color-foreground);
-  place-items: center;
-  border: 1px solid var(--color-highlight);
-  color: var(--text);
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: grey;
+  border-radius: 9999px;
+  border: 2px solid var(--primaryBg);
 }
- */

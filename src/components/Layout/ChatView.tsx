@@ -5,9 +5,9 @@ import ModalIcon from './ModalIcon';
 
 interface ChatViewProps {
     user: {
-        id: number;
+        id: string;
         name: string;
-        imageUrl: string;
+        imageUrl?: string;
         isOnline: boolean;
     };
 }

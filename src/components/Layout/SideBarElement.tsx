@@ -2,7 +2,7 @@ interface SideBarElementProps {
     name: string;
     lastMessage?: string;
     timestamp?: string;
-    imageUrl: string;
+    imageUrl?: string;
     isOnline?: boolean;
     isSelected?: boolean;
     unreadCount?: number;
@@ -13,7 +13,7 @@ export default function SideBarElement({
     name,
     lastMessage,
     timestamp,
-    imageUrl,
+    imageUrl="",
     isOnline = false,
     isSelected = false,
     unreadCount = 0,

@@ -3,8 +3,9 @@
 import ModalIcon from './ModalIcon';
 import { useAuth } from '@/hooks/useAuth';
 import SettingsView from '../Misc/SettingsView';
+import Button from '../FormFields/Button';
 export default function IconBar() {
-    const {logout} = useAuth();
+    const {logout , isAuthenticated, user} = useAuth();
     const handleLogout = () => {
         console.log('Logout clicked');
         logout();
@@ -24,7 +25,7 @@ export default function IconBar() {
                 <SettingsView/>
             </ModalIcon>
 
-            <ModalIcon
+            {isAuthenticated && (<ModalIcon
                 icon={
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15"/>
@@ -36,15 +37,17 @@ export default function IconBar() {
                 <div className="space-y-4">
                     <p>Are you sure you want to logout?</p>
                     <div className="flex gap-3 justify-end">
-                        <button className="px-4 py-2 rounded-lg bg-secondaryBg text-text hover:bg-secondaryBg/80 transition-colors">
-                            Cancel
-                        </button>
-                        <button onClick={handleLogout} className="px-4 py-2 rounded-lg bg-primary text-primaryBg hover:opacity-90 transition-opacity">
-                            Logout
-                        </button>
+                        <Button label= "Logout" onClick={handleLogout}></Button>
                     </div>
                 </div>
-            </ModalIcon>
+            </ModalIcon>)}
+            <div className="mt-auto"> 
+                {isAuthenticated && (<img
+                        className="object-cover w-14 h-14 rounded-full"
+                        src={user?.profileImageURL}
+                        alt={user?.name}
+                    />)}
+            </div>
         </div>
     );
 }
