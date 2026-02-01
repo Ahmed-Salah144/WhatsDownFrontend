@@ -14,7 +14,16 @@ const userChatListSchema= z.array(z.object(
 const loginResponseScehma=z.object({
     user: userSchema,
     token: z.string()
-    })
+})
+
+const registerResponseSchema = z.object({
+    success: z.boolean(),
+    message: z.string().optional()
+})
+
+const errorResponseSchema = z.object({
+    error: z.string()
+})
 export async function fetchChatList(userId: string)
 {
     try
@@ -26,20 +35,25 @@ export async function fetchChatList(userId: string)
         },
         body: JSON.stringify({id: userId})
         });
+        
+        const rawData = await response.json();
+        
         if(!response.ok)
         {
-            console.log("Server Error")
-            throw new Error ("Server Error, fetching chat list failed");
+            const errorData = errorResponseSchema.parse(rawData);
+            throw new Error(errorData.error);
         }
-        const rawData = await response.json();
+        
         const data = userChatListSchema.parse(rawData);
         return data;
     }
     catch(e)
     {
         console.log(e);
-        console.log("Failed to parse Chat List");
-        return null;
+        if(e instanceof Error) {
+            throw e;
+        }
+        throw new Error("Failed to parse chat list");
     }
 }
 export async function sendLoginRequest(email:string, password:string)
@@ -53,20 +67,56 @@ export async function sendLoginRequest(email:string, password:string)
         },
         body: JSON.stringify({email,password})
         });
+        
+        const rawData = await response.json();
+        
         if(!response.ok)
         {
-            console.log("Server Error")
-            throw new Error ("Login Failed");
+            const errorData = errorResponseSchema.parse(rawData);
+            throw new Error(errorData.error);
         }
-        const rawData = await response.json();
+        
         const data = loginResponseScehma.parse(rawData);
         return data;
     }
     catch(e)
     {
-        console.log(e);
-        console.log("Failed to parse login response");
-        return null;
+        if(e instanceof Error) {
+            throw e; // Re-throw with the actual error message
+        }
+        throw new Error("Failed to parse login response");
+    }
+}
+
+export async function sendRegisterRequest(username: string, email: string, password: string, confirmPassword: string)
+{
+    try
+    {
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, email, password, confirmPassword })
+        });
+        
+        const rawData = await response.json();
+        
+        if(!response.ok)
+        {
+            const errorData = errorResponseSchema.parse(rawData);
+            throw new Error(errorData.error);
+        }
+        
+        const data = registerResponseSchema.parse(rawData);
+        return data;
+    }
+    catch(e)
+    {
+        if(e instanceof Error) {
+            throw e; // Re-throw with the actual error message
+        }
+        throw new Error("Failed to parse register response");
     }
 }
 export async function sendLogoutRequest(userId: string)

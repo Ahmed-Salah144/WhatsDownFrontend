@@ -35,22 +35,16 @@ export default function AuthProvider({ children }: {children:React.ReactNode})
     }, []);
 
     const login = async ( email: string, password:string) => {
-        setIsLoading(true);
         try{
             const data = await sendLoginRequest(email,password);
-            if(!data)
-                throw new Error("Login Failed")
             localStorage.setItem('authToken', data.token);
             setUser(data.user);
         }
         catch(e)
         {
-            console.log("Login Failed");
-            console.log(e);
-        }
-        finally
-        {
-            setIsLoading(false);
+            console.log("Login Failed:", e);
+            // Re-throw the error so the component can handle it
+            throw e;
         }
     }
     

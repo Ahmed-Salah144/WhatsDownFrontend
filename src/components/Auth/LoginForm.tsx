@@ -6,9 +6,13 @@ import InputField from "../FormFields/InputField"
 import Button from "../FormFields/Button"
 import Link from "next/link"
 import { useAuth } from "@/hooks/useAuth"
+import { useState } from "react"
+
 export default function LoginForm()
 {
     const {login} = useAuth();
+    const [serverError, setServerError] = useState<string>("");
+    
     const {register, handleSubmit, formState} =useForm<loginData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -18,20 +22,29 @@ export default function LoginForm()
         mode:"onSubmit",
         reValidateMode: "onSubmit"
     });
+    
     const onSubmit = async (data: loginData) => {
+        setServerError("");
+        
         try
         {
-            login(data.email,data.password);
+            await login(data.email, data.password);
         }
         catch (err)
         {
-            console.log("Login Request Failed");
-            console.log(err);
+            if (err instanceof Error) {
+                setServerError(err.message);
+            } else {
+                setServerError("An unexpected error occurred");
+            }
+            console.log("Login Request Failed:", err);
         }
     }
+    
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 shadow-lg p-3 justify-center rounded-lg my-4 mx-4 bg-secondaryBg/60 ">
             <h1 className="text-primary py-1 px-1"> Log in to Your Whatsdown Account</h1>
+
             <InputField fieldname= "email" type="email" label ="Email" register={register}></InputField>
             <InputField fieldname= "password" type="password" label ="Password" register={register}></InputField>
             <div className="flex w-full pt-1 px-4 mb-1 mx-auto justify-center">
@@ -39,8 +52,11 @@ export default function LoginForm()
                     <Link href="/register/" className="justify-center">Don't Have an Account? Sign Up Here</Link> 
                 </div>
             </div>
-            <span className="text-primary">{formState.errors.email? formState.errors.email.message : " " }</span>
-            <span className="text-primary">{formState.errors.password? formState.errors.password.message : " " }</span>
+            {(serverError || !!formState.errors.email || !! formState.errors.password) && (
+                <div className="text-primary">
+                    Invalid Email or Password
+                </div>
+            )}
             <Button label = "Login"></Button>
         </form>
     )

@@ -1,12 +1,15 @@
-import { profile } from 'console';
 import { NextRequest, NextResponse } from 'next/server';
+import { findUserByEmail } from '../mockDb';
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const { email, password } = body;
 
-        // Mock validation - accept any email/password for testing
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Validate required fields
         if (!email || !password) {
             return NextResponse.json(
                 { error: 'Email and password are required' },
@@ -14,29 +17,44 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Mock user data
-        const mockUser = {
-            id: 'user-123',
-            name: 'Ahmed Salah',
-            profileImageURL: 'https://i.pinimg.com/originals/26/ea/fc/26eafce27f80bfd438d3fff61fc7479e.jpg'
-        };
+        // Find user by email
+        const user = findUserByEmail(email);
+        
+        // User not found
+        if (!user) {
+            return NextResponse.json(
+                { error: 'Invalid email or password' },
+                { status: 401 }
+            );
+        }
 
-        // Create a simple mock JWT (not cryptographically secure, just for testing)
-        // Format: header.payload.signature
+        // Check password
+        if (user.password !== password) {
+            return NextResponse.json(
+                { error: 'Invalid email or password' },
+                { status: 401 }
+            );
+        }
+
+        // Create mock JWT token
         const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
         const payload = btoa(JSON.stringify({
-            userId: mockUser.id,
-            name: mockUser.name,
-            profileImageURL: mockUser.profileImageURL,
+            userId: user.id,
+            name: user.name,
+            profileImageURL: user.profileImageURL,
             exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24) // 24 hours
         }));
-        const signature = btoa('mock-signature-' + email);
+        const signature = btoa('mock-signature-' + user.email);
         const mockToken = `${header}.${payload}.${signature}`;
 
         return NextResponse.json({
             success: true,
             token: mockToken,
-            user: mockUser
+            user: {
+                id: user.id,
+                name: user.name,
+                profileImageURL: user.profileImageURL
+            }
         });
 
     } catch (error) {

@@ -5,8 +5,14 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import InputField from "../FormFields/InputField"
 import Button from "../FormFields/Button"
 import Link from "next/link"
-export default function LoginForm()
+import { sendRegisterRequest } from "@/lib/api"
+import { useState } from "react"
+
+export default function RegisterForm()
 {
+    const [serverError, setServerError] = useState<string>("");
+    const [successMessage, setSuccessMessage] = useState<string>("");
+    
     const {register, handleSubmit, formState} =useForm<registerData>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -18,26 +24,50 @@ export default function LoginForm()
         mode:"onSubmit",
         reValidateMode: "onSubmit"
     });
+    
     const onSubmit = async (data: registerData) => {
+        setServerError("");
+        setSuccessMessage("");
+        
         try
         {
-            const res = await fetch("http://localhost:3001/register",{
-                method: "POST",
-                body: JSON.stringify(data)
-            })
-            if(!res.ok) throw new Error ("Server Error");
-            const result = await res.json();
-            console.log("Request Sent", result);
+            const result = await sendRegisterRequest(
+                data.username,
+                data.email,
+                data.password,
+                data.confirmPassword
+            );
+            
+            setSuccessMessage(result.message || "Registration successful!");
+            console.log("Registration successful", result);
         }
         catch (err)
         {
-            console.log("Registeration Request Failed");
-            console.log(err);
+            if (err instanceof Error) {
+                setServerError(err.message);
+            } else {
+                setServerError("An unexpected error occurred");
+            }
+            console.log("Registration failed:", err);
         }
     }
+    
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 shadow-lg p-3 justify-center rounded-lg my-4 mx-4 bg-secondaryBg/60 ">
             <h1 className="text-primary py-1 px-1"> Create a Whatsdown Account</h1>
+            
+            {serverError && (
+                <div className="mx-3 mt-2 p-2 bg-primary/20 border border-primary rounded text-primary text-sm">
+                    {serverError}
+                </div>
+            )}
+            
+            {successMessage && (
+                <div className="mx-3 mt-2 p-2 bg-primary/20 border border-primary rounded text-primary text-sm">
+                    {successMessage}
+                </div>
+            )}
+            
             <InputField fieldname= "username" type="text" label ="Username" register={register}></InputField>
             <span className="text-primary">{formState.errors.username? formState.errors.username.message : " " }</span>
             <InputField fieldname= "email" type="email" label ="Email" register={register}></InputField>
