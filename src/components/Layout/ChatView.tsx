@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import IconButton from './IconButton';
+import ModalIcon from './ModalIcon';
 
 interface ChatViewProps {
     user: {
@@ -55,13 +55,16 @@ export default function ChatView({ user }: ChatViewProps) {
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <IconButton
+                    <ModalIcon
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                             </svg>
                         }
-                    />
+                        modalTitle="Coming Soon"
+                    >
+                        <p className="text-text/80">This feature is coming soon!</p>
+                    </ModalIcon>
                     {/* <button className="p-2 text-text/60 hover:text-text hover:bg-secondary rounded-lg transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -99,20 +102,26 @@ export default function ChatView({ user }: ChatViewProps) {
                 className="px-2 py-1 border-t mb-3 mx-4 border-secondaryBg bg-primaryBg rounded-full shadow-2xl"
             >
                 <div className="flex items-center gap-2">
-                    <IconButton
+                    <ModalIcon
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                         }
-                    />
-                    <IconButton
+                        modalTitle="Coming Soon"
+                    >
+                        <p className="text-text/80">This feature is coming soon!</p>
+                    </ModalIcon>
+                    <ModalIcon
                         icon={
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
                             </svg>
                         }
-                    />
+                        modalTitle="Coming Soon"
+                    >
+                        <p className="text-text/80">This feature is coming soon!</p>
+                    </ModalIcon>
 
                     <input
                         type="text"

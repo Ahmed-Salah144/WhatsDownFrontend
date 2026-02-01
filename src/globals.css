@@ -9,6 +9,15 @@
   --highlightedText: #1dab62;
   --warningLabel: #f70a0a;
 }
+.light{
+  --primary: #1dab62;
+  --primaryBg: #ffffff;
+  --secondary: #d8fcd2;
+  --secondaryBg :#f2ece4;
+  --text: #0a0a0a;
+  --highlightedText: #1dab62;
+  --warningLabel: #f70a0a;
+}
 .dark{
   --primary: #144d37;
   --primaryBg: #161717;
