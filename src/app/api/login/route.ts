@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
         const mockUser = {
             id: 'user-123',
             name: 'Ahmed Salah',
-            email: email,
             profileImageURL: 'https://i.pinimg.com/originals/26/ea/fc/26eafce27f80bfd438d3fff61fc7479e.jpg'
         };
 
@@ -27,7 +26,6 @@ export async function POST(request: NextRequest) {
         const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
         const payload = btoa(JSON.stringify({
             userId: mockUser.id,
-            email: mockUser.email,
             name: mockUser.name,
             profileImageURL: mockUser.profileImageURL,
             exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24) // 24 hours

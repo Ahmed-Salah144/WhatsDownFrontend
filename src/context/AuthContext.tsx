@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { AuthContext, AuthContextValue, User} from "@/lib/auth"
 import Spinner from "@/components/Misc/Spinner";
+import { sendLoginRequest ,sendLogoutRequest} from "@/lib/api";
 export default function AuthProvider({ children }: {children:React.ReactNode})
 {
     const [user, setUser] = useState<User | null>(null);
@@ -35,32 +36,42 @@ export default function AuthProvider({ children }: {children:React.ReactNode})
 
     const login = async ( email: string, password:string) => {
         setIsLoading(true);
-        const response = await fetch("/api/login",{
-            method:"POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({email,password})
-        });
-        const data = await response.json();
-        if(!response.ok)
-        {
-            console.log("Server Error")
-            throw new Error ("Login Failed");
+        try{
+            const data = await sendLoginRequest(email,password);
+            if(!data)
+                throw new Error("Login Failed")
+            localStorage.setItem('authToken', data.token);
+            setUser(data.user);
         }
-        
-        // Store token in localStorage
-        localStorage.setItem('authToken', data.token);
-        setUser(data.user);
-        setIsLoading(false);
+        catch(e)
+        {
+            console.log("Login Failed");
+            console.log(e);
+        }
+        finally
+        {
+            setIsLoading(false);
+        }
     }
     
     const logout = async () =>{
-        setIsLoading(true);
-        await fetch("/api/logout", { method: "POST" });
-        localStorage.removeItem('authToken');
-        setUser(null);
-        setIsLoading(false);
+        try{
+            setIsLoading(true);
+            if(!user)
+                throw new Error("No User Logged in")
+            await sendLogoutRequest(user.id);
+            localStorage.removeItem('authToken');
+            setUser(null);
+        }
+        catch(e)
+        {
+            console.log("Logout Failed")
+            console.log(e);
+        }
+        finally
+        {
+            setIsLoading(false);   
+        }
     }
     
     const value: AuthContextValue = {
